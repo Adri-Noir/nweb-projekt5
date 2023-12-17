@@ -56,7 +56,6 @@ export default function Upcoming() {
             });
           }
         } catch (err) {
-          console.log("Periodic background sync failed:", err);
           setBackgroundSync(false);
         }
       });

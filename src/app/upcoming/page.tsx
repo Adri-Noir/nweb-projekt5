@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import MovieData, { MovieType } from "@/components/MovieData";
 
 export default function Upcoming() {
+  const [backgroundSync, setBackgroundSync] = useState<boolean>(true);
   const [data, setData] = useState<Array<MovieType>>([]);
 
   useEffect(() => {
@@ -56,6 +57,7 @@ export default function Upcoming() {
           }
         } catch (err) {
           console.log("Periodic background sync failed:", err);
+          setBackgroundSync(false);
         }
       });
     }
@@ -65,12 +67,21 @@ export default function Upcoming() {
     <div className={"m-4"}>
       <p className={"text-3xl font-bold"}>Upcoming Movies</p>
       <div className={"flex flex-wrap gap-4"}>
+        {!backgroundSync && (
+          <div className={"flex justify-center items-center w-full h-[400px]"}>
+            <p className={"text-2xl font-bold"}>
+              Background Sync is not supported in your browser. If you want to
+              use this feature, please install the app
+            </p>
+          </div>
+        )}
+
         {data.length > 0 &&
           data.map((movie: MovieType) => {
             return <MovieData movie={movie} key={movie.id} />;
           })}
 
-        {data.length === 0 && (
+        {backgroundSync && data.length === 0 && (
           <div className={"flex justify-center items-center w-full h-[400px]"}>
             <p className={"text-2xl font-bold"}>Loading...</p>
           </div>
